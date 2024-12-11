@@ -20,9 +20,13 @@ SafeApprove, and corner cases with zero transfers or the zero address, ERC-721, 
 
 ### Homework 3
 
-Creating an implementation of ERC20 token but not using any standard library like OpenZeppelin. The goal is to learn how
-to implement the ERC20 token from scratch (NOT RECOMMENDED FOR PRODUCTION). Also creating a simple contract to deposit
-ERC20 with proper safe transfer from OpenZeppelin library.
+Creating an implementation of ERC721 with the following requirements:
+
+- Minting price of $2 USDC
+- Atomicswap with ERC20
+
+Contract:
+[0xFa6f88db697E1e536208ba2EA537728644831C9B](https://sepolia.basescan.org/address/0xc6d20ab1ccbddc963a7818bf9fd4c777b0bc571b#code)
 
 ## License
 
