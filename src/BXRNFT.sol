@@ -12,13 +12,14 @@ contract BXRNFT is ERC721, AccessControl {
     using SafeERC20 for IERC20;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    uint256 public MIN_MINT_FEES = 1_000_000; // 1 USDC
     uint256 public nftCount = 0;
-    IERC20 public usdc = IERC20(0x036CbD53842c5426634e7929541eC2318f3dCF7e);
+    uint256 public MIN_MINT_FEES = 1_000_000; // 1 USDC
+    IERC20 public usdc;
 
-    constructor() ERC721("BaseXRareSkills", "BXR") {
+    constructor(address _usdc) ERC721("BaseXRareSkills", "BXR") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
+        usdc = IERC20(_usdc);
     }
 
     error InsufficientBalance(uint256 available, uint256 required);
