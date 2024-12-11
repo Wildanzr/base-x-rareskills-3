@@ -42,4 +42,57 @@ contract BXRNFTTest is Test {
         bxrnft.withdrawFees(1_000_000);
         assertEq(usdc.balanceOf(address(this)), balanceBefore + 1_000_000);
     }
+
+    function testListedNFT() public {
+        usdc.transfer(address(1), 100_000_000);
+        vm.startPrank(address(1));
+        usdc.approve(address(bxrnft), 100_000_000);
+        bxrnft.publicMint(1_000_000);
+
+        bxrnft.approve(address(bxrnft), 1);
+        bxrnft.listNFT(1, 1_000_000);
+        assertEq(bxrnft.nftPrices(1), 1_000_000);
+        vm.stopPrank();
+    }
+
+    function testUnlistedNFT() public {
+        usdc.transfer(address(1), 100_000_000);
+        vm.startPrank(address(1));
+        usdc.approve(address(bxrnft), 100_000_000);
+        bxrnft.publicMint(1_000_000);
+
+        bxrnft.approve(address(bxrnft), 1);
+        bxrnft.listNFT(1, 1_000_000);
+        assertEq(bxrnft.nftPrices(1), 1_000_000);
+
+        bxrnft.unlistNFT(1);
+        assertEq(bxrnft.nftPrices(1), 0);
+        vm.stopPrank();
+    }
+
+    function testBuyNFT() public {
+        usdc.transfer(address(1), 50_000_000);
+        usdc.transfer(address(2), 50_000_000);
+
+        vm.startPrank(address(1));
+        usdc.approve(address(bxrnft), 100_000_000);
+        bxrnft.publicMint(1_000_000);
+
+        bxrnft.approve(address(bxrnft), 1);
+        bxrnft.listNFT(1, 2_000_000);
+        assertEq(bxrnft.nftPrices(1), 2_000_000);
+        vm.stopPrank();
+
+        uint256 balanceBefore = usdc.balanceOf(address(1));
+
+        vm.startPrank(address(2));
+        usdc.approve(address(bxrnft), 10_000_000);
+        // slippage 0, increase slippage by base price + (base price * max slippage)
+        bxrnft.buyNFT(1, 2_000_000);
+        vm.stopPrank();
+
+        assertEq(bxrnft.nftPrices(1), 0);
+        assertEq(bxrnft.ownerOf(1), address(2));
+        assertEq(usdc.balanceOf(address(1)), balanceBefore + 2_000_000);
+    }
 }
